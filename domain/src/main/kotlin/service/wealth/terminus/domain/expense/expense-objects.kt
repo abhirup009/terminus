@@ -1,9 +1,25 @@
 package service.wealth.terminus.domain.expense
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import service.wealth.terminus.domain.split.Split
 import service.wealth.terminus.domain.user.User
 import java.math.BigDecimal
-
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "splitType")
+@JsonSubTypes(
+    JsonSubTypes.Type(
+        value = Expense.Equal::class,
+        name = Expense.Constants.Equal
+    ),
+    JsonSubTypes.Type(
+        value = Expense.Exact::class,
+        name = Expense.Constants.Exact
+    ),
+    JsonSubTypes.Type(
+        value = Expense.Percent::class,
+        name = Expense.Constants.Percent
+    )
+)
 sealed class Expense(
     open val expenseId: String,
     open val description: String,
@@ -14,6 +30,12 @@ sealed class Expense(
 ) {
     enum class Type {
         PERCENT, EQUAL, EXACT
+    }
+
+    object Constants {
+        const val Equal = "EQUAL"
+        const val Exact = "EXACT"
+        const val Percent = "PERCENT"
     }
 
     abstract fun validate(): Boolean

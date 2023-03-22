@@ -1,13 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-	kotlin("jvm") version "1.7.22"
-	application
+	kotlin("jvm")
 }
 
 group = "service.wealth"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
 	mavenCentral()
@@ -45,32 +41,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
 
-
-	// Jackson
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
-
-	// https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
-
-	implementation("commons-io:commons-io:2.11.0")
-
-	implementation(project("controller"))
 	implementation(project(":core"))
-}
-
-application {
-	mainClass.set("service.wealth.terminus.Main")
-}
-
-allprojects {
-	tasks.withType<KotlinCompile> {
-		kotlinOptions {
-			jvmTarget = JavaVersion.VERSION_17.toString()
-		}
-	}
-}
-
-tasks.test {
-	useJUnitPlatform()
+	implementation(project(":domain"))
 }

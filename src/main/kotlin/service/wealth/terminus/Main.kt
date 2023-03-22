@@ -1,10 +1,10 @@
 package service.wealth.terminus
 
 
-object TerminusApplication {
+object Main {
 
 	@JvmStatic
 	fun main(args: Array<String>) {
-		service.wealth.terminus.TerminusApplication
+		service.wealth.terminus.commons.initializeApplication()
 	}
 }
