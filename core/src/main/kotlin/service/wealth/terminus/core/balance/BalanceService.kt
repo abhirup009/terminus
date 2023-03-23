@@ -1,9 +1,9 @@
-package service.wealth.terminus.core.expense
+package service.wealth.terminus.core.balance
 
 import service.wealth.terminus.domain.expense.Expense
 import service.wealth.terminus.domain.expense.ExpenseDb
 
-class ExpenseService(
+class BalanceService(
     private val expenseDb: ExpenseDb
 ) {
     fun createExpense(expense: Expense): Expense {

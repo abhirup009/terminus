@@ -25,7 +25,7 @@ sealed class Expense(
     open val description: String,
     open val expenseAmount: BigDecimal,
     open val paidByUsers: Map<User, BigDecimal>,
-    val splitType: Type,
+    open val splitType: Type,
     open var splits: List<Split>
 ) {
     enum class Type {
@@ -42,6 +42,7 @@ sealed class Expense(
     abstract fun computeAmount()
 
     data class Equal(
+        override val splitType: Type = Type.EQUAL,
         override val expenseId: String,
         override val description: String,
         override val expenseAmount: BigDecimal,
@@ -55,6 +56,10 @@ sealed class Expense(
         splitType = Type.EQUAL,
         splits = splits
     ) {
+        init {
+            validate()
+        }
+
         override fun validate(): Boolean {
             // Checks if all the elements are equal in amount and are of Split.Equal class
             return splits.all { it.amountOwed == splits[0].amountOwed && it is Split.Equal }
@@ -67,6 +72,7 @@ sealed class Expense(
     }
 
     data class Exact(
+        override val splitType: Type = Type.EXACT,
         override val expenseId: String,
         override val description: String,
         override val expenseAmount: BigDecimal,
@@ -80,6 +86,10 @@ sealed class Expense(
         splitType = Type.EXACT,
         splits = splits
     ) {
+        init {
+            validate()
+        }
+
         override fun validate(): Boolean {
             return splits.all { it is Split.Exact }
                     && paidByUsers.values.sumOf { it } == splits.sumOf { it.amountOwed!! }
@@ -90,6 +100,7 @@ sealed class Expense(
         }
     }
     data class Percent(
+        override val splitType: Type = Type.PERCENT,
         override val expenseId: String,
         override val description: String,
         override val expenseAmount: BigDecimal,
@@ -104,8 +115,10 @@ sealed class Expense(
         splits = splits
     ) {
         init {
+            validate()
             computeAmount()
         }
+
         override fun validate(): Boolean {
             // Checks if all the elements are equal in amount and are of Split.Equal class
             return splits.all { it is Split.Percent }
@@ -114,7 +127,8 @@ sealed class Expense(
 
         override fun computeAmount() {
             splits = splits.map {
-                it as Split.Percent
+                it as? Split.Percent
+                    ?: throw IllegalArgumentException()
 
                 Split.Percent(
                     paidToUser = it.paidToUser,

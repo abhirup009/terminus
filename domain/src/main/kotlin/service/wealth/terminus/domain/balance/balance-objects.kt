@@ -7,13 +7,14 @@ data class Balance(
     val amountOwedToUser: BigDecimal,
     val amountGetBackFromUser: BigDecimal
 )
-
 data class UserBalance(
     val otherUsersPerspectiveBalance: Map<User, Balance>,
-
-    // Aggregates
-    val totalExpense: BigDecimal,
-    val totalPayment: BigDecimal,
-    val totalOwe: BigDecimal, // You owe this to others
-    val totalGetBack: BigDecimal // Others will pay you this
-)
+    val aggregates: Aggregates
+) {
+    data class Aggregates(
+        val totalExpense: BigDecimal,
+        val totalPayment: BigDecimal,
+        val totalOwe: BigDecimal, // You owe this to others
+        val totalGetBack: BigDecimal // Others will pay you this
+    )
+}
