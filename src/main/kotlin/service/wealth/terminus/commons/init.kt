@@ -9,6 +9,7 @@ import org.glassfish.jersey.logging.LoggingFeature
 import org.glassfish.jersey.netty.httpserver.NettyHttpContainerProvider
 import org.glassfish.jersey.server.ResourceConfig
 import service.wealth.terminus.core.expense.ExpenseService
+import service.wealth.terminus.domain.expense.LocalExpenseDb
 import java.net.URI
 import java.util.logging.FileHandler
 import java.util.logging.Level
@@ -17,7 +18,8 @@ import java.util.logging.Logger
 fun initializeApplication() {
     val objectMapper: ObjectMapper = jacksonObjectMapper()
 
-    val expenseService = ExpenseService()
+    val localExpenseDb = LocalExpenseDb()
+    val expenseService = ExpenseService(expenseDb = localExpenseDb)
 
     val applicationBinder = ApplicationBinder(
         expenseService = expenseService

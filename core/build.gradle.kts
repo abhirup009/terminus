@@ -41,4 +41,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
 
+	implementation(project(":domain"))
+	implementation(project(":data"))
+
 }
