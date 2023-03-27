@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import service.wealth.terminus.domain.split.Split
 import service.wealth.terminus.domain.user.User
 import java.math.BigDecimal
+import java.util.UUID
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "splitType")
 @JsonSubTypes(
     JsonSubTypes.Type(
@@ -21,10 +23,10 @@ import java.math.BigDecimal
     )
 )
 sealed class Expense(
-    open val expenseId: String,
+    open val expenseId: String = UUID.randomUUID().toString(),
     open val description: String,
     open val expenseAmount: BigDecimal,
-    open val paidByUsers: Map<User, BigDecimal>,
+    open val paidByUsers: Map<String, BigDecimal>,
     open val splitType: Type,
     open var splits: List<Split>
 ) {
@@ -43,10 +45,10 @@ sealed class Expense(
 
     data class Equal(
         override val splitType: Type = Type.EQUAL,
-        override val expenseId: String,
+        override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
-        override val paidByUsers: Map<User, BigDecimal>,
+        override val paidByUsers: Map<String, BigDecimal>,
         override var splits: List<Split>
     ) : Expense(
         expenseId = expenseId,
@@ -73,10 +75,10 @@ sealed class Expense(
 
     data class Exact(
         override val splitType: Type = Type.EXACT,
-        override val expenseId: String,
+        override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
-        override val paidByUsers: Map<User, BigDecimal>,
+        override val paidByUsers: Map<String, BigDecimal>,
         override var splits: List<Split>
     ) : Expense(
         expenseId = expenseId,
@@ -101,10 +103,10 @@ sealed class Expense(
     }
     data class Percent(
         override val splitType: Type = Type.PERCENT,
-        override val expenseId: String,
+        override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
-        override val paidByUsers: Map<User, BigDecimal>,
+        override val paidByUsers: Map<String, BigDecimal>,
         override var splits: List<Split>
     ) : Expense(
         expenseId = expenseId,

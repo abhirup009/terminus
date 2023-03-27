@@ -13,7 +13,7 @@ data class User(
 data class UserPatchRequest(
     val userId: String, // Used for identification,
     val name: String? = null,
-    val otherUsersPerspectiveBalance: Map<User, Balance>? = null,
+    val otherUsersPerspectiveBalance: MutableMap<String, Balance>? = null,
     val totalExpense: BigDecimal? = null,
     val totalPayment: BigDecimal? = null,
     val totalOwe: BigDecimal? = null, // You owe this to others

@@ -19,6 +19,11 @@ class LocalUserDb() : UserDb {
         return userMap[userId] ?: throw NullPointerException()
     }
 
+    override fun getUsers(): List<User> {
+        logger.info { "Fetching all users" }
+        return userMap.map { it.value }
+    }
+
     override fun patchUser(userPatchRequest: UserPatchRequest): User {
         logger.info { "Received a patch: $userPatchRequest" }
 
@@ -34,10 +39,10 @@ class LocalUserDb() : UserDb {
                         ?: user.userPerspectiveBalanceSheet.aggregates.totalExpense,
                     totalPayment = userPatchRequest.totalPayment
                         ?: user.userPerspectiveBalanceSheet.aggregates.totalPayment,
-                    totalOwe = userPatchRequest.totalOwe
-                        ?: user.userPerspectiveBalanceSheet.aggregates.totalOwe, // You owe this to others
-                    totalGetBack = userPatchRequest.totalGetBack
-                        ?: user.userPerspectiveBalanceSheet.aggregates.totalGetBack // Others will pay you this
+                    totalYouOwe = userPatchRequest.totalOwe
+                        ?: user.userPerspectiveBalanceSheet.aggregates.totalYouOwe, // You owe this to others
+                    totalYouGetBack = userPatchRequest.totalGetBack
+                        ?: user.userPerspectiveBalanceSheet.aggregates.totalYouGetBack // Others will pay you this
                 )
             )
         )
