@@ -9,6 +9,7 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import service.wealth.terminus.core.expense.ExpenseService
 import service.wealth.terminus.domain.expense.Expense
+import service.wealth.terminus.domain.user.User
 
 @Path("/terminus")
 class ExpenseController {
@@ -16,10 +17,10 @@ class ExpenseController {
     @Inject
     private lateinit var expenseService: ExpenseService
 
-    @GET
+    @POST
     @Path("/expense")
     @Produces("application/json")
-    fun createExpense() {
-        TODO("TBD")
+    fun createExpense(expense: Expense): Expense {
+        return expenseService.createExpense(expense = expense)
     }
 }

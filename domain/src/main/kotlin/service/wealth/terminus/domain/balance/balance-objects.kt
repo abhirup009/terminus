@@ -4,17 +4,17 @@ import service.wealth.terminus.domain.user.User
 import java.math.BigDecimal
 
 data class Balance(
-    val amountOwedToUser: BigDecimal,
-    val amountGetBackFromUser: BigDecimal
+    var amountOwedToUser: BigDecimal,
+    var amountGetBackFromUser: BigDecimal
 )
 data class UserBalance(
-    val otherUsersPerspectiveBalance: Map<User, Balance>,
-    val aggregates: Aggregates
+    var otherUsersPerspectiveBalance: MutableMap<String, Balance>,
+    var aggregates: Aggregates
 ) {
     data class Aggregates(
-        val totalExpense: BigDecimal,
-        val totalPayment: BigDecimal,
-        val totalOwe: BigDecimal, // You owe this to others
-        val totalGetBack: BigDecimal // Others will pay you this
+        var totalExpense: BigDecimal = BigDecimal.ZERO,
+        var totalPayment: BigDecimal = BigDecimal.ZERO,
+        var totalYouOwe: BigDecimal = BigDecimal.ZERO, // You owe this to others
+        var totalYouGetBack: BigDecimal = BigDecimal.ZERO // Others will pay you this
     )
 }
