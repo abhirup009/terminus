@@ -9,6 +9,10 @@ class LocalUserDb() : UserDb {
     val userMap: MutableMap<String, User> = mutableMapOf()
 
     override fun createUser(user: User): User {
+        if (userMap.containsKey(user.id)) {
+            throw Exception()
+        }
+
         userMap[user.id] = user
         logger.info { "Inserted user to Map. \nTotal Map: $userMap" }
         return user
