@@ -63,9 +63,11 @@ sealed class Expense(
         }
 
         override fun validate(): Boolean {
-            // Checks if all the elements are equal in amount and are of Split.Equal class
-            return splits.all { it.amountOwed == splits[0].amountOwed && it is Split.Equal }
+            return (splits.all { it.amountOwed == splits[0].amountOwed && it is Split.Equal }
                     && paidByUsers.values.sumOf { it } == splits.sumOf { it.amountOwed!! }
+                    && expenseAmount == paidByUsers.values.sumOf { it })
+                .takeIf { it }
+                ?: throw IllegalArgumentException()
         }
 
         override fun computeAmount() {
@@ -93,14 +95,18 @@ sealed class Expense(
         }
 
         override fun validate(): Boolean {
-            return splits.all { it is Split.Exact }
+            return (splits.all { it is Split.Exact }
                     && paidByUsers.values.sumOf { it } == splits.sumOf { it.amountOwed!! }
+                    && expenseAmount == paidByUsers.values.sumOf { it })
+                .takeIf { it }
+                ?: throw IllegalArgumentException()
         }
 
         override fun computeAmount() {
             TODO("Not yet implemented")
         }
     }
+
     data class Percent(
         override val splitType: Type = Type.PERCENT,
         override val expenseId: String = UUID.randomUUID().toString(),
@@ -117,14 +123,17 @@ sealed class Expense(
         splits = splits
     ) {
         init {
-            validate()
             computeAmount()
+            validate()
         }
 
         override fun validate(): Boolean {
             // Checks if all the elements are equal in amount and are of Split.Equal class
-            return splits.all { it is Split.Percent }
+            return (splits.all { it is Split.Percent }
                     && paidByUsers.values.sumOf { it } == splits.sumOf { it.amountOwed!! }
+                    && expenseAmount == paidByUsers.values.sumOf { it })
+                .takeIf { it }
+                ?: throw IllegalArgumentException()
         }
 
         override fun computeAmount() {
