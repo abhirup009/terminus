@@ -44,7 +44,9 @@ class UserController {
             Pair("cristiano", "b235d5af-9161-46a9-bd66-4f738a55d321"),
             Pair("messi", "a0fe5104-4b87-467c-9a8c-90e038f9306d"),
             Pair("ronaldinho", "e5239dca-997c-431f-86f8-91b686bf43bd"),
-            Pair("isco", "1e748bad-d699-4b8d-b917-3388a4ef053f")
+            Pair("isco", "1e748bad-d699-4b8d-b917-3388a4ef053f"),
+            Pair("vini", "xe748bad-d699-4b8d-b917-3388a4ef053f"),
+            Pair("luka", "pe748bad-d699-4b8d-b917-3388a4ef053f")
         )
             .map { userService.createUserWithId(name = it.first, userId = it.second) }
     }

@@ -24,7 +24,7 @@ import java.math.BigDecimal
 sealed class Split(
     open val type: Type,
     open val paidToUser: String,
-    open val amountOwed: BigDecimal? = null
+    open var amountOwed: BigDecimal? = null
 ) {
     enum class Type {
         EXACT, EQUAL, PERCENT
@@ -39,7 +39,7 @@ sealed class Split(
     data class Exact(
         override val type: Type = Type.EXACT,
         override val paidToUser: String,
-        override val amountOwed: BigDecimal
+        override var amountOwed: BigDecimal? = null
     ): Split(
         type = Type.EXACT,
         paidToUser = paidToUser,
@@ -49,7 +49,7 @@ sealed class Split(
     data class Equal(
         override val type: Type = Type.EQUAL,
         override val paidToUser: String,
-        override val amountOwed: BigDecimal
+        override var amountOwed: BigDecimal? = null
     ): Split(
         type = Type.EQUAL,
         paidToUser = paidToUser,
@@ -59,7 +59,7 @@ sealed class Split(
     data class Percent(
         override val type: Type = Type.PERCENT,
         override val paidToUser: String,
-        override val amountOwed: BigDecimal? = null,
+        override var amountOwed: BigDecimal? = null,
         val percent: BigDecimal
     ): Split(
         type = Type.PERCENT,
