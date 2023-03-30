@@ -27,7 +27,7 @@ sealed class Expense(
     open val expenseId: String,
     open val description: String,
     open val expenseAmount: BigDecimal,
-    open val paidByUsers: Map<String, BigDecimal>,
+    open var paidByUsers: Map<String, BigDecimal>,
     open var splits: List<Split>
 ) {
     abstract val splitType: Type
@@ -49,7 +49,7 @@ sealed class Expense(
         override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
-        override val paidByUsers: Map<String, BigDecimal>,
+        override var paidByUsers: Map<String, BigDecimal>,
         override var splits: List<Split>
     ) : Expense(
         expenseId = expenseId,
@@ -95,7 +95,7 @@ sealed class Expense(
         override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
-        override val paidByUsers: Map<String, BigDecimal>,
+        override var paidByUsers: Map<String, BigDecimal>,
         override var splits: List<Split>
     ) : Expense(
         expenseId = expenseId,
@@ -127,7 +127,7 @@ sealed class Expense(
         override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
-        override val paidByUsers: Map<String, BigDecimal>,
+        override var paidByUsers: Map<String, BigDecimal>,
         override var splits: List<Split>
     ) : Expense(
         expenseId = expenseId,

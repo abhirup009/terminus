@@ -2,6 +2,7 @@ package service.wealth.terminus.domain.user
 
 import mu.KotlinLogging
 import service.wealth.terminus.domain.balance.UserBalance
+import service.wealth.terminus.domain.expense.Expense
 
 class LocalUserDb() : UserDb {
     private val logger = KotlinLogging.logger {}
