@@ -3,9 +3,10 @@ package service.wealth.terminus.domain.expense
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import service.wealth.terminus.domain.split.Split
-import service.wealth.terminus.domain.user.User
+import service.wealth.terminus.domain.utils.GlobalConstants
 import java.math.BigDecimal
-import java.util.UUID
+import java.math.RoundingMode
+import java.util.*
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "splitType")
 @JsonSubTypes(
@@ -23,13 +24,14 @@ import java.util.UUID
     )
 )
 sealed class Expense(
-    open val expenseId: String = UUID.randomUUID().toString(),
+    open val expenseId: String,
     open val description: String,
     open val expenseAmount: BigDecimal,
     open val paidByUsers: Map<String, BigDecimal>,
-    open val splitType: Type,
     open var splits: List<Split>
 ) {
+    abstract val splitType: Type
+
     enum class Type {
         PERCENT, EQUAL, EXACT
     }
@@ -44,7 +46,6 @@ sealed class Expense(
     abstract fun computeAmount()
 
     data class Equal(
-        override val splitType: Type = Type.EQUAL,
         override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
@@ -55,15 +56,17 @@ sealed class Expense(
         description = description,
         expenseAmount = expenseAmount,
         paidByUsers = paidByUsers,
-        splitType = Type.EQUAL,
         splits = splits
     ) {
+        override val splitType: Type = Type.EQUAL
+
         init {
+            computeAmount()
             validate()
         }
 
         override fun validate(): Boolean {
-            return (splits.all { it.amountOwed == splits[0].amountOwed && it is Split.Equal }
+            return (splits.all { it is Split.Equal }
                     && paidByUsers.values.sumOf { it } == splits.sumOf { it.amountOwed!! }
                     && expenseAmount == paidByUsers.values.sumOf { it })
                 .takeIf { it }
@@ -71,12 +74,24 @@ sealed class Expense(
         }
 
         override fun computeAmount() {
-            TODO("Not yet implemented")
+            val numberOfSplits = splits.size.toBigDecimal()
+            val baseAmount = expenseAmount.divide(numberOfSplits, 2, RoundingMode.FLOOR)
+            var remainder = expenseAmount.minus(baseAmount.multiply(numberOfSplits))
+            val perSplitAdditionalRemainder = remainder.divide(numberOfSplits, 2, RoundingMode.CEILING)
+
+            var index: Int = 0
+
+            splits.forEach { it.amountOwed = baseAmount }
+
+            while (remainder != GlobalConstants.BigDecimalZero) {
+                splits[index].amountOwed = splits[index].amountOwed?.plus(perSplitAdditionalRemainder)
+                remainder = remainder.minus(perSplitAdditionalRemainder)
+                index = (index + 1) % numberOfSplits.toInt()
+            }
         }
     }
 
     data class Exact(
-        override val splitType: Type = Type.EXACT,
         override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
@@ -87,9 +102,10 @@ sealed class Expense(
         description = description,
         expenseAmount = expenseAmount,
         paidByUsers = paidByUsers,
-        splitType = Type.EXACT,
         splits = splits
     ) {
+        override val splitType: Type = Type.EXACT
+
         init {
             validate()
         }
@@ -108,7 +124,6 @@ sealed class Expense(
     }
 
     data class Percent(
-        override val splitType: Type = Type.PERCENT,
         override val expenseId: String = UUID.randomUUID().toString(),
         override val description: String,
         override val expenseAmount: BigDecimal,
@@ -119,9 +134,10 @@ sealed class Expense(
         description = description,
         expenseAmount = expenseAmount,
         paidByUsers = paidByUsers,
-        splitType = Type.PERCENT,
         splits = splits
     ) {
+        override val splitType: Type = Type.PERCENT
+
         init {
             computeAmount()
             validate()
