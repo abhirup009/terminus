@@ -38,7 +38,7 @@ jobs:
   push:
     name: Package and push Docker image to DockerHub
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
+#    if: ${{ github.event_name == 'push' }}
     env:
       COMMIT_SHA: ${{ github.sha }}
     steps:
