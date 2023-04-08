@@ -61,7 +61,7 @@ jobs:
       - name: Build and push
         run: |
           ./gradlew clean build jibDockerBuild
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/terminus
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/terminus:latest
 
       - name: Logout of Docker Hub
         if: always()
