@@ -61,7 +61,7 @@ jobs:
       - name: Build and push
         run: |
           ./gradlew clean build jibDockerBuild
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/terminus:$COMMIT_SHA
+          docker tag terminus ${{ secrets.DOCKERHUB_USERNAME }}/terminus:$COMMIT_SHA
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/terminus
 
       - name: Logout of Docker Hub
