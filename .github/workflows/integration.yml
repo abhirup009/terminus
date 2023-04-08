@@ -71,8 +71,8 @@ jobs:
       - name: Build and push
         run: |
           ./gradlew clean build jibDockerBuild
-          docker tag $CONTAINER_NAME ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:latest 
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:latest
+          docker tag $CONTAINER_NAME ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:${GITHUB_REF#refs/heads/} 
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:${GITHUB_REF#refs/heads/}
 
       - name: Logout of Docker Hub
         if: always()
