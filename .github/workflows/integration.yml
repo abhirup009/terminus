@@ -38,11 +38,17 @@ jobs:
   push:
     name: Package and push Docker image to DockerHub
     runs-on: ubuntu-latest
-#    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' }}
     env:
       COMMIT_SHA: ${{ github.sha }}
       CONTAINER_NAME: terminus
     steps:
+      - name: Set environment
+        run: echo "CI_COMMIT_REF_NAME=$(echo $GITHUB_REF | cut -d '/' -f 3)" >> $GITHUB_ENV
+
+      - name: Set Image tag as Environment variable
+        run: echo "DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA_SHORT)" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -62,8 +68,8 @@ jobs:
       - name: Build and push
         run: |
           ./gradlew clean build jibDockerBuild
-          docker tag $CONTAINER_NAME ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:latest 
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:latest
+          docker tag $CONTAINER_NAME ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:$DOCKER_IMAGE_TAG 
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$CONTAINER_NAME:$DOCKER_IMAGE_TAG
 
       - name: Logout of Docker Hub
         if: always()
