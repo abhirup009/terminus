@@ -43,15 +43,6 @@ jobs:
       COMMIT_SHA: ${{ github.sha }}
       CONTAINER_NAME: terminus
     steps:
-      - name: Set short git commit SHA
-        id: vars
-        run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "::set-output name=short_sha::$calculatedSha"
-
-      - name: Confirm git commit SHA output
-        run: echo ${{ steps.vars.outputs.short_sha }}
-
       - name: Checkout
         uses: actions/checkout@v3
 
