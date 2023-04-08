@@ -3,9 +3,7 @@ package service.wealth.terminus.core.user
 import service.wealth.terminus.domain.balance.UserBalance
 import service.wealth.terminus.domain.user.User
 import service.wealth.terminus.domain.user.UserDb
-import java.util.UUID
-import java.util.random.RandomGenerator
-import java.util.random.RandomGeneratorFactory
+import java.util.*
 
 class UserService(
     private val userDb: UserDb
