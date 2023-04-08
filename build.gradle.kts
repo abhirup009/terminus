@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("jvm") version "1.7.22"
+	kotlin("jvm") version "1.8.20-RC"
+	id("com.google.cloud.tools.jib") version "3.1.4"
 	application
 }
 
@@ -70,6 +71,20 @@ allprojects {
 			jvmTarget = JavaVersion.VERSION_17.toString()
 		}
 	}
+}
+
+jib {
+	from {
+		image = "amazoncorretto:17-alpine-jdk"
+	}
+	to {
+		image = "terminus"
+	}
+	container {
+		ports = listOf("8080")
+		mainClass = "service.wealth.terminus.Main"
+	}
+	containerizingMode = "packaged"
 }
 
 tasks.test {
